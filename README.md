@@ -4,6 +4,10 @@
   <em>Visualizing how Vietnamese people spend their daily time using Pandas & D3Blocks</em>
 </p>
 
+<p align="center">
+  <strong>👨‍🏫 Built as part of the <a href="https://www.youtube.com/@vietnh1009">Visual Project Course by Viet Nguyen AI</a></strong>
+</p>
+
 <hr/>
 
 <h2>🚀 Features</h2>
