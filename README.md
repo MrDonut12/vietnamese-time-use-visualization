@@ -61,7 +61,7 @@ python main.py
 
 <p>This will automatically create a <code>main.html</code> file in your working directory.</p>
 <p>Just open it in your web browser to explore the interactive time-use animation.</p>
-
+<p>However, you can also access the access link directly: https://mrdonut12.github.io/vietnamese-time-use-visualization/</p>
 <hr/>
 
 <h2>📁 Output Preview</h2>
