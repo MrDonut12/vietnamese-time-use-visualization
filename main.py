@@ -1,23 +1,17 @@
 import pandas as pd
 from time import gmtime, strftime
 from d3blocks import D3Blocks
-import os
 
-from flask import Flask, send_file
-
-app = Flask(__name__)
-script_dir = os.path.dirname(os.path.abspath(__file__))
-csv_path = os.path.join(script_dir, "4_diary_main.csv")
-html_output_path = os.path.join(script_dir, "main.html")
 
 def convert_time(minute):
     return strftime("%d-%m-%Y %H:%M:%S", gmtime(int(minute) * 60))
+
 
 def get_activity(code):
     code = int(code)
     if code in [101, 102, 199, 201, 202, 299, 301, 302, 399, 401, 402, 499, 502]:
         return "Work"
-    elif code in [198, 298, 498, 598, 698, 798, 898, 998, 1098, 1198, 1298, 1398, 1498, 1598]:
+    elif code in [198, 298, 298, 498, 598, 698, 798, 898, 998, 1098, 1198, 1298, 1398, 1498, 1598]:
         return "Travelling"
     elif code in [501]:
         return "Sell food"
@@ -50,29 +44,14 @@ def get_activity(code):
     else:
         return "Others"
 
-@app.route("/")
-def generate_and_serve_html():
-    data = pd.read_csv(csv_path, usecols=["ID", "BEGIN", "Q401"],
-                       encoding='latin-1',
-                       converters={"Q401": get_activity, "BEGIN": convert_time})
 
-    data = data.sort_values(["ID", "BEGIN"])
-    data = data.rename(columns={"ID": "sample_id", "BEGIN": "datatime", "Q401": "state"})
-    data = data.iloc[:int(len(data) / 4)]
+data = pd.read_csv("4_diary_main.csv", usecols=["ID", "BEGIN", "Q401"],
+                   encoding='latin-1',
+                   converters={"Q401": get_activity, "BEGIN": convert_time})
+data = data.sort_values(["ID", "BEGIN"])
+data = data.rename(columns={"ID": "sample_id", "BEGIN": "datatime", "Q401": "state"})
+data = data.iloc[:int(len(data) / 4)]
+d3 = D3Blocks()
 
-    d3 = D3Blocks()
-    d3.movingbubbles(data,
-                     datetime="datatime",
-                     sample_id="sample_id",
-                     state="state",
-                     filepath=html_output_path,
-                     note="How Vietnamese people spend their time",
-                     cmap="hsv",
-                     center="Travelling",
-                     figsize=(780, 800),
-                     size=2)
-
-    return send_file(html_output_path)
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+d3.movingbubbles(data, datetime="datatime", sample_id="sample_id", state="state", filepath="./index.html",
+                 note="How Vietnamese people spend their time", cmap="hsv", center="Travelling", figsize=(780, 800), size=2)
